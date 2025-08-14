@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Variabel untuk menyimpan state UI
     let activeCodebase = '';
-    let selectedModel = 'gemini-1.5-flash-latest'; // Model default
+    let selectedModel = 'gemini-2.5-flash-latest'; // Model default
 
     // --- Selektor Elemen DOM ---
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     
     // Elemen UI Sidebar & Header
-    const newChatBtn = document.querySelector('aside button.flex'); // Tombol New Chat lama, bisa disesuaikan
+    const newChatBtn = document.querySelector('aside button.flex');
     const modelSelectorBtn = document.getElementById('model-selector-btn');
     const modelDropdown = document.getElementById('model-dropdown');
     const modelSelectorLinks = modelDropdown.querySelectorAll('a');
@@ -25,12 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Logika Event Listener ---
 
-    // Fungsikan tombol "New Chat" (saat ini hanya me-reload)
     if (newChatBtn) {
         newChatBtn.addEventListener('click', () => window.location.href = '/');
     }
 
-    // Fungsikan dropdown pemilih model
     if (modelSelectorBtn && modelDropdown) {
         modelSelectorBtn.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -38,16 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Tambahkan event listener untuk setiap link model
     modelSelectorLinks.forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
             const newModel = link.getAttribute('data-model');
-            const modelText = link.querySelector('span').innerText.trim(); // Ambil teks dari span
+            const modelText = link.querySelector('span').innerText.trim();
 
             if (newModel) {
                 selectedModel = newModel;
-                modelNameDisplay.innerText = modelText; // Update tampilan tombol
+                modelNameDisplay.innerText = modelText;
 
                 // Update tanda centang
                 modelSelectorLinks.forEach(l => {
@@ -64,34 +61,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Sembunyikan dropdown jika klik di luar area
     window.addEventListener('click', () => {
         if (modelDropdown && !modelDropdown.classList.contains('hidden')) {
             modelDropdown.classList.add('hidden');
         }
     });
 
-    // Fungsikan tombol untuk membuka modal codebase
     if (codebaseBtn) {
         codebaseBtn.addEventListener('click', () => {
             codebaseModal.classList.remove('hidden');
         });
     }
 
-    // Fungsikan tombol untuk menutup modal
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', () => {
             codebaseModal.classList.add('hidden');
         });
     }
 
-    // Fungsikan tombol untuk menyimpan codebase dari modal
     if (saveCodebaseBtn) {
         saveCodebaseBtn.addEventListener('click', () => {
             activeCodebase = codebaseTextarea.value;
             console.log("Codebase saved!");
             codebaseModal.classList.add('hidden');
-            // Beri feedback visual bahwa codebase aktif
             codebaseBtn.classList.add('text-blue-600');
         });
     }
@@ -114,9 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const aiMessageContainer = appendMessage('', 'ai');
         const aiTextElement = aiMessageContainer.querySelector('.message-content');
         
-        // Tambahkan indikator loading
         aiTextElement.innerHTML = '<div class="p-1"><span class="font-semibold animate-pulse">Caecillia is thinking...</span></div>';
-
 
         try {
             const response = await fetch('/chat', {
@@ -135,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const decoder = new TextDecoder();
             let aiResponse = '';
             
-            // Hapus indikator loading saat chunk pertama diterima
             let firstChunk = true;
 
             while (true) {
@@ -143,13 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (done) break;
                 
                 if(firstChunk) {
-                    aiTextElement.innerHTML = ''; // Hapus loading
+                    aiTextElement.innerHTML = '';
                     firstChunk = false;
                 }
 
                 const chunk = decoder.decode(value, { stream: true });
                 aiResponse += chunk;
-                aiTextElement.innerHTML = aiResponse; // Render sebagai HTML
+                aiTextElement.innerHTML = aiResponse;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         } catch (error) {
@@ -166,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm ${role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-800'}`;
         
         const textElement = document.createElement('div');
-        textElement.className = 'message-content prose prose-sm max-w-none'; // Styling dengan tailwind typography
+        textElement.className = 'message-content prose prose-sm max-w-none';
         textElement.innerHTML = content;
 
         messageBubble.appendChild(textElement);
