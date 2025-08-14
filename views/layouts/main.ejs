@@ -8,6 +8,8 @@
     
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+
     <style>
         /* Custom scrollbar style */
         ::-webkit-scrollbar {
@@ -23,10 +25,22 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b; /* gray-500 */
         }
+
+        /* Override style Prism agar menyatu dengan container kita */
+        pre[class*="language-"] {
+            background: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            text-shadow: none !important; /* Menghilangkan shadow teks dari beberapa tema */
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
     <%- body %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
     <script src="/js/ui_logic.js"></script>
 </body>
 </html>

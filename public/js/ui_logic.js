@@ -147,7 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 5. Atur style untuk tag <pre> dan <code>
             pre.className = 'p-4 overflow-x-auto text-sm bg-transparent';
-            code.classList.add('text-gray-200');
+            // Memicu Prism untuk mewarnai elemen kode ini
+            Prism.highlightElement(code);
         });
     };
 
