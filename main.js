@@ -17,7 +17,7 @@ function createWindow() {
   });
 
   // Muat aplikasi dari server lokal Express
-  mainWindow.loadURL('http://localhost:3000');
+  mainWindow.loadURL('http://localhost:41999');
 
   // Buka DevTools untuk debugging, bisa dihapus nanti
   mainWindow.webContents.openDevTools();

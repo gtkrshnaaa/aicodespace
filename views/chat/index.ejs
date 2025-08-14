@@ -1,25 +1,58 @@
-<% layout('../layouts/main') %>
+<div class="flex h-screen font-sans">
+    <aside class="w-64 bg-gray-100 p-4 flex flex-col text-gray-800">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-xl font-semibold">Gemini</h1>
+            <button class="p-2 rounded-full hover:bg-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </div>
+        <button class="flex items-center gap-2 w-full p-2 mb-4 text-left text-sm bg-blue-100 text-blue-700 rounded-lg">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+            New Chat
+        </button>
+        <div class="flex-grow">
+            <h2 class="text-sm font-medium text-gray-500 mb-2 px-2">Recent</h2>
+            <a href="#" class="block p-2 rounded-lg hover:bg-gray-200 text-sm truncate">Melengkapi AI Code Space...</a>
+            <a href="#" class="block p-2 rounded-lg hover:bg-gray-200 text-sm truncate">Membangun AI Code Spacer...</a>
+        </div>
+        <div class="text-sm">
+            <a href="#" class="block p-2 rounded-lg hover:bg-gray-200">Settings</a>
+            <a href="#" class="block p-2 rounded-lg hover:bg-gray-200">Help</a>
+        </div>
+    </aside>
 
-<div class="flex h-screen">
-    <div class="w-full flex flex-col">
-        <header class="bg-gray-800 p-4 shadow-md">
-            <h1 class="text-xl font-semibold">AI Code Space</h1>
+    <main class="flex-1 flex flex-col bg-white text-gray-800">
+        <header class="flex items-center justify-between p-2 border-b">
+             <div class="text-lg font-medium">AI Code Space</div>
+             <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                K
+             </div>
         </header>
 
-        <main class="flex-1 p-4 overflow-y-auto">
-            <!-- Tempat pesan-pesan chat akan muncul -->
-            <div id="chat-container">
-                <div class="p-4 bg-gray-800 rounded-lg">
-                    <p>Halo Kiann, selamat datang di AI Code Space! Aku Caecillia, siap membantumu hari ini. 😊</p>
+        <div id="welcome-screen" class="flex-1 flex flex-col justify-center items-center p-4">
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text mb-12">
+                Hello, Kiann
+            </h1>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-4xl">
+                <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Factor numbers with quantum computing</div>
+                <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Simulate a virtual ecosystem</div>
+                <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Model spread of contagious diseases</div>
+                <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Evaluate the Fermi Paradox</div>
+            </div>
+        </div>
+
+        <div id="chat-container" class="hidden flex-1 p-4 overflow-y-auto">
+            </div>
+
+        <footer class="p-4 bg-white">
+            <div class="max-w-4xl mx-auto">
+                <div class="relative flex items-center p-2 bg-gray-100 rounded-full">
+                    <textarea id="chat-input" class="flex-1 bg-transparent text-lg px-4 focus:outline-none resize-none" placeholder="Ask Gemini..." rows="1"></textarea>
+                    <button id="send-btn" class="ml-4 p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    </button>
                 </div>
             </div>
-        </main>
-
-        <footer class="p-4 bg-gray-800">
-            <div class="flex items-center">
-                <textarea id="chat-input" class="w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ketik pesanmu di sini..."></textarea>
-                <button id="send-btn" class="ml-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700">Kirim</button>
-            </div>
         </footer>
-    </div>
+    </main>
 </div>
