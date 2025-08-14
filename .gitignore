@@ -1,6 +1,8 @@
 # Folder dependensi
 node_modules/
 
+z_listing
+
 # File Konfigurasi Sensitif & Spesifik Pengguna
 # Ini akan mencegah keys.json dan settings.json terkirim ke repository
 config/keys.json
