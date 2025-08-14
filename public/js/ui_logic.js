@@ -1,9 +1,40 @@
 // public/js/ui_logic.js
 document.addEventListener('DOMContentLoaded', () => {
+    // Variabel yang sudah ada...
     const welcomeScreen = document.getElementById('welcome-screen');
     const chatContainer = document.getElementById('chat-container');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
+    
+    // Variabel baru untuk elemen UI
+    const newChatBtn = document.querySelector('aside button.flex'); // Tombol "New Chat" lebih spesifik
+    const modelSelectorBtn = document.getElementById('model-selector-btn');
+    const modelDropdown = document.getElementById('model-dropdown');
+
+    // --- Fungsionalitas Tombol ---
+
+    // 1. Fungsikan tombol "New Chat"
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', () => {
+            // Untuk saat ini, kita reload halaman untuk memulai chat baru
+            window.location.reload();
+        });
+    }
+
+    // 2. Fungsikan dropdown pemilih model
+    if (modelSelectorBtn && modelDropdown) {
+        modelSelectorBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Mencegah window.click dieksekusi
+            modelDropdown.classList.toggle('hidden');
+        });
+    }
+    
+    // Sembunyikan dropdown jika klik di luar area
+    window.addEventListener('click', () => {
+        if (modelDropdown && !modelDropdown.classList.contains('hidden')) {
+            modelDropdown.classList.add('hidden');
+        }
+    });
 
     const sendMessage = async () => {
         const message = chatInput.value.trim();

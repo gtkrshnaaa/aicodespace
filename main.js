@@ -6,31 +6,35 @@ const path = require('path');
 require('./index.js');
 
 function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // Kita akan buat file ini nanti jika perlu
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
+    const mainWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        title: "AI Code Space", // Judul jendela aplikasi
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'), // Kita akan buat file ini nanti jika perlu
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
 
-  // Muat aplikasi dari server lokal Express
-  mainWindow.loadURL('http://localhost:41999');
+    // Menghilangkan menu bar bawaan
+    mainWindow.setMenuBarVisibility(false);
 
-  // Buka DevTools untuk debugging, bisa dihapus nanti
-  mainWindow.webContents.openDevTools();
+    // Muat aplikasi dari server lokal Express
+    mainWindow.loadURL('http://localhost:41999');
+
+    // Buka DevTools untuk debugging, bisa dihapus nanti
+    mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
-  createWindow();
+    createWindow();
 
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+    app.on('activate', function () {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
 });
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin') app.quit();
 });

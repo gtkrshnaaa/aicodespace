@@ -22,11 +22,23 @@
     </aside>
 
     <main class="flex-1 flex flex-col bg-white text-gray-800">
-        <header class="flex items-center justify-between p-2 border-b">
-             <div class="text-lg font-medium">AI Code Space</div>
-             <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+        <header class="flex items-center justify-between p-2">
+            <div class="relative">
+                <button id="model-selector-btn" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
+                    <span class="text-lg font-medium">Gemini</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div id="model-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-10">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini 2.5 Flash</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini Pro</a>
+                </div>
+            </div>
+
+            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
                 K
-             </div>
+            </div>
         </header>
 
         <div id="welcome-screen" class="flex-1 flex flex-col justify-center items-center p-4">
