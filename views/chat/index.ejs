@@ -1,7 +1,7 @@
 <div class="flex h-screen font-sans">
     <aside class="w-64 bg-gray-100 p-4 flex flex-col text-gray-800">
         <div class="flex items-center justify-between mb-8">
-            <h1 class="text-xl font-semibold">Gemini</h1>
+            <h1 class="text-xl font-semibold">Session</h1>
             <button class="p-2 rounded-full hover:bg-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             </button>
@@ -25,26 +25,21 @@
         <header class="flex items-center justify-between p-2">
             <div class="relative">
                 <button id="model-selector-btn" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
-                    <span class="text-lg font-medium">Gemini</span>
+                    <span class="text-lg font-medium">Gemini 2.5 Flash</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
                 <div id="model-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border z-10">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini 2.5 Flash</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini Pro</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini 2.5 Flash (Selected)</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gemini 2.5 Pro</a>
                 </div>
             </div>
-
-            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                K
-            </div>
+            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">K</div>
         </header>
 
         <div id="welcome-screen" class="flex-1 flex flex-col justify-center items-center p-4">
-            <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text mb-12">
-                Hello, Kiann
-            </h1>
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text mb-12">Hello, Kiann</h1>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-4xl">
                 <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Factor numbers with quantum computing</div>
                 <div class="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 cursor-pointer">Simulate a virtual ecosystem</div>
@@ -53,18 +48,37 @@
             </div>
         </div>
 
-        <div id="chat-container" class="hidden flex-1 p-4 overflow-y-auto">
-            </div>
+        <div id="chat-container" class="hidden flex-1 p-4 overflow-y-auto"></div>
 
         <footer class="p-4 bg-white">
             <div class="max-w-4xl mx-auto">
                 <div class="relative flex items-center p-2 bg-gray-100 rounded-full">
+                    <button id="codebase-btn" title="Inject Codebase" class="p-3 text-gray-600 rounded-full hover:bg-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-4m0 0l4-4m-4 4H4" />
+                        </svg>
+                    </button>
                     <textarea id="chat-input" class="flex-1 bg-transparent text-lg px-4 focus:outline-none resize-none" placeholder="Ask Gemini..." rows="1"></textarea>
-                    <button id="send-btn" class="ml-4 p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    <button id="send-btn" title="Send Message" class="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
                     </button>
                 </div>
             </div>
         </footer>
+
+        <div id="codebase-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+            <div class="bg-white rounded-lg shadow-xl w-1/2 h-3/4 flex flex-col p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Inject Codebase</h2>
+                    <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800">&times;</button>
+                </div>
+                <textarea id="codebase-textarea" class="flex-1 w-full p-4 border rounded-md resize-none font-mono" placeholder="Paste your codebase here..."></textarea>
+                <div class="flex justify-end mt-4">
+                    <button id="save-codebase-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Codebase</button>
+                </div>
+            </div>
+        </div>
     </main>
 </div>

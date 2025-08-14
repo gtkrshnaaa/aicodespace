@@ -1,30 +1,36 @@
-// public/js/ui_logic.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Variabel yang sudah ada...
+    // Variabel untuk menyimpan codebase yang aktif
+    let activeCodebase = '';
+
+    // --- Selektor Elemen DOM ---
     const welcomeScreen = document.getElementById('welcome-screen');
     const chatContainer = document.getElementById('chat-container');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
     
-    // Variabel baru untuk elemen UI
-    const newChatBtn = document.querySelector('aside button.flex'); // Tombol "New Chat" lebih spesifik
+    // Elemen UI Sidebar & Header
+    const newChatBtn = document.querySelector('aside button.flex');
     const modelSelectorBtn = document.getElementById('model-selector-btn');
     const modelDropdown = document.getElementById('model-dropdown');
 
-    // --- Fungsionalitas Tombol ---
+    // Elemen Modal Codebase
+    const codebaseBtn = document.getElementById('codebase-btn');
+    const codebaseModal = document.getElementById('codebase-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const saveCodebaseBtn = document.getElementById('save-codebase-btn');
+    const codebaseTextarea = document.getElementById('codebase-textarea');
 
-    // 1. Fungsikan tombol "New Chat"
+    // --- Logika Event Listener ---
+
+    // Fungsikan tombol "New Chat"
     if (newChatBtn) {
-        newChatBtn.addEventListener('click', () => {
-            // Untuk saat ini, kita reload halaman untuk memulai chat baru
-            window.location.reload();
-        });
+        newChatBtn.addEventListener('click', () => window.location.reload());
     }
 
-    // 2. Fungsikan dropdown pemilih model
+    // Fungsikan dropdown pemilih model
     if (modelSelectorBtn && modelDropdown) {
         modelSelectorBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Mencegah window.click dieksekusi
+            event.stopPropagation();
             modelDropdown.classList.toggle('hidden');
         });
     }
@@ -36,76 +42,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Fungsikan tombol untuk membuka modal codebase
+    if (codebaseBtn) {
+        codebaseBtn.addEventListener('click', () => {
+            codebaseModal.classList.remove('hidden');
+        });
+    }
+
+    // Fungsikan tombol untuk menutup modal
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            codebaseModal.classList.add('hidden');
+        });
+    }
+
+    // Fungsikan tombol untuk menyimpan codebase dari modal
+    if (saveCodebaseBtn) {
+        saveCodebaseBtn.addEventListener('click', () => {
+            activeCodebase = codebaseTextarea.value;
+            console.log("Codebase saved!", activeCodebase); // Untuk debugging
+            codebaseModal.classList.add('hidden');
+            // Beri feedback visual bahwa codebase aktif
+            codebaseBtn.classList.add('text-blue-600'); 
+        });
+    }
+
+    // --- Fungsi Inti ---
+
     const sendMessage = async () => {
         const message = chatInput.value.trim();
         if (!message) return;
 
-        // Jika ini pesan pertama, sembunyikan welcome screen dan tampilkan chat
+        // Di sini kita bisa menyertakan `activeCodebase` jika perlu
+        // const fullMessage = `Codebase:\n${activeCodebase}\n\nQuestion: ${message}`;
+        // Untuk sekarang, kita tetap kirim pesan aslinya saja
+
         if (!welcomeScreen.classList.contains('hidden')) {
             welcomeScreen.classList.add('hidden');
             chatContainer.classList.remove('hidden');
         }
 
-        // 1. Tampilkan pesan pengguna di UI
         appendMessage(message, 'user');
-        chatInput.value = ''; // Kosongkan input
-        autoResizeTextarea(chatInput); // Reset tinggi textarea
+        chatInput.value = '';
+        autoResizeTextarea(chatInput);
 
-        // 2. Buat container untuk respons AI
         const aiMessageContainer = appendMessage('', 'ai');
         const aiTextElement = aiMessageContainer.querySelector('.message-content');
 
         try {
-            // 3. Kirim pesan ke backend dan proses respons stream
             const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                // Nanti body bisa di-extend dengan codebase
                 body: JSON.stringify({ message }),
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let aiResponse = '';
-
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
-                
                 const chunk = decoder.decode(value, { stream: true });
                 aiResponse += chunk;
-                
-                // Render secara real-time
-                aiTextElement.innerHTML = aiResponse; // Gunakan innerHTML karena responsnya HTML
-                chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll
+                aiTextElement.innerHTML = aiResponse;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         } catch (error) {
             console.error('Error fetching chat response:', error);
-            aiTextElement.innerHTML = '<p class="text-red-500">Maaf, terjadi kesalahan saat menghubungi AI.</p>';
+            aiTextElement.innerHTML = '<p class="text-red-500">Maaf, terjadi kesalahan.</p>';
         }
     };
 
-    // Fungsi untuk menambahkan pesan ke kontainer chat
     const appendMessage = (content, role) => {
         const messageWrapper = document.createElement('div');
         messageWrapper.className = `mb-6 flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-        
         const messageBubble = document.createElement('div');
         messageBubble.className = `max-w-2xl rounded-xl p-4 ${role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`;
-
         const textElement = document.createElement('div');
-        textElement.className = 'message-content'; // Class baru untuk target update
-        textElement.innerHTML = content; // Gunakan innerHTML untuk merender HTML dari AI
-
+        textElement.className = 'message-content';
+        textElement.innerHTML = content;
         messageBubble.appendChild(textElement);
         messageWrapper.appendChild(messageBubble);
         chatContainer.appendChild(messageWrapper);
-        chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll ke bawah
-
-        return messageBubble; // Kembalikan elemen bubble untuk di-update (khusus AI)
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        return messageBubble;
     };
 
     const autoResizeTextarea = (el) => {
@@ -114,13 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     sendBtn.addEventListener('click', sendMessage);
-
     chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
-
     chatInput.addEventListener('input', () => autoResizeTextarea(chatInput));
 });
