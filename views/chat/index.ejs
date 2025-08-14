@@ -1,60 +1,59 @@
 <div class="flex h-screen font-sans">
-    <aside class="w-64 bg-gray-100 dark:bg-[#161b22] p-4 flex flex-col text-gray-800 dark:text-gray-300 border-r dark:border-gray-700">
+    <aside class="w-64 bg-gray-200/50 dark:bg-zinc-800 p-4 flex flex-col border-r dark:border-zinc-700">
         <div class="flex items-center justify-between mb-8">
             <h1 class="text-xl font-semibold">AI Code Space</h1>
         </div>
-        <button class="flex items-center gap-3 w-full p-2 mb-4 text-left text-sm bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400 rounded-lg font-medium">
+        <button class="flex items-center gap-3 w-full p-2 mb-4 text-left text-sm bg-gray-900/10 dark:bg-white/10 rounded-lg font-medium">
             <i class="uil uil-plus-circle text-xl"></i>
             New Chat
         </button>
-        <div class="flex-grow overflow-y-auto">
-        </div>
-        <div class="text-sm pt-4 border-t dark:border-gray-700">
-            <a href="/settings" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+        <div class="flex-grow overflow-y-auto"></div>
+        <div class="text-sm pt-4 border-t dark:border-zinc-700">
+            <a href="/settings" class="flex items-center gap-3 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5">
                 <i class="uil uil-cog"></i>
                 <span>Settings</span>
             </a>
-            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5">
                 <i class="uil uil-question-circle"></i>
                 <span>Help</span>
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-white dark:bg-[#0d1117] text-gray-800 dark:text-gray-300">
-        <header class="flex items-center justify-between p-2 border-b dark:border-gray-700">
+    <main class="flex-1 flex flex-col bg-white dark:bg-zinc-900">
+        <header class="flex items-center justify-between p-2 dark:border-zinc-700">
             <div class="relative">
-                <button id="model-selector-btn" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                <button id="model-selector-btn" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800">
                     <span class="text-lg font-medium">Gemini 2.5 Flash</span>
                     <i class="uil uil-angle-down text-xl text-gray-500"></i>
                 </button>
-                <div id="model-dropdown" class="hidden absolute left-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-md shadow-lg border dark:border-gray-700 z-10">
-                    <a href="#" data-model="gemini-2.5-flash" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                <div id="model-dropdown" class="hidden absolute left-0 mt-2 w-64 bg-white dark:bg-zinc-800 rounded-md shadow-lg border dark:border-zinc-700 z-10">
+                    <a href="#" data-model="gemini-2.5-flash" class="flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-zinc-700">
                         <span>Gemini 2.5 Flash</span>
-                        <i class="uil uil-check-circle text-blue-600"></i>
+                        <i class="uil uil-check-circle text-gray-800 dark:text-white"></i>
                     </a>
-                    <a href="#" data-model="gemini-2.5-pro" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <a href="#" data-model="gemini-2.5-pro" class="flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-zinc-700">
                         <span>Gemini 2.5 Pro</span>
                     </a>
                 </div>
             </div>
-            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">K</div>
+            <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-zinc-700 flex items-center justify-center font-bold">K</div>
         </header>
 
         <div id="welcome-screen" class="flex-1 flex flex-col justify-center items-center p-4">
-            <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text mb-12">Hello, Kiann</h1>
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 text-transparent bg-clip-text mb-12">Hello, Kiann</h1>
         </div>
 
         <div id="chat-container" class="hidden flex-1 p-4 overflow-y-auto"></div>
 
-        <footer class="p-4 bg-white dark:bg-[#161b22] border-t dark:border-gray-700">
+        <footer class="p-4 bg-white/50 backdrop-blur-sm dark:bg-zinc-900/50 border-t dark:border-zinc-700">
             <div class="max-w-4xl mx-auto">
-                <div class="relative flex items-center p-2 bg-gray-50 dark:bg-gray-800 rounded-full border dark:border-gray-600">
-                    <button id="codebase-btn" title="Inject Codebase" class="p-3 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                <div class="relative flex items-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-full border dark:border-zinc-700">
+                    <button id="codebase-btn" title="Inject Codebase" class="p-3 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-700">
                         <i class="uil uil-brackets-curly text-xl"></i>
                     </button>
                     <textarea id="chat-input" class="flex-1 bg-transparent text-lg px-4 focus:outline-none resize-none" placeholder="Ask me anything..." rows="1"></textarea>
-                    <button id="send-btn" title="Send Message" class="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-400">
+                    <button id="send-btn" title="Send Message" class="p-3 bg-gray-800 text-white rounded-full hover:bg-black dark:bg-gray-200 dark:text-black dark:hover:bg-white disabled:bg-gray-400">
                         <i class="uil uil-arrow-up text-xl"></i>
                     </button>
                 </div>
@@ -62,14 +61,14 @@
         </footer>
 
         <div id="codebase-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-            <div class="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-1/2 h-3/4 flex flex-col p-6">
+            <div class="bg-gray-50 dark:bg-zinc-900 rounded-lg shadow-xl w-1/2 h-3/4 flex flex-col p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Inject Codebase</h2>
                     <button id="close-modal-btn" class="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white text-3xl">&times;</button>
                 </div>
-                <textarea id="codebase-textarea" class="flex-1 w-full p-4 border dark:border-gray-600 rounded-md resize-none font-mono text-sm bg-white dark:bg-gray-800 dark:text-gray-300" placeholder="Paste your codebase here..."></textarea>
+                <textarea id="codebase-textarea" class="flex-1 w-full p-4 border dark:border-zinc-700 rounded-md resize-none font-mono text-sm bg-white dark:bg-zinc-800" placeholder="Paste your codebase here..."></textarea>
                 <div class="flex justify-end mt-4">
-                    <button id="save-codebase-btn" class="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <button id="save-codebase-btn" class="flex items-center gap-2 px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-black dark:bg-gray-200 dark:text-black dark:hover:bg-white">
                         <i class="uil uil-save"></i>
                         <span>Save Codebase</span>
                     </button>
