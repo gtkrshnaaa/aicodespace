@@ -1,3 +1,4 @@
+// public/js/ui_logic.js
 document.addEventListener('DOMContentLoaded', () => {
     // Variabel untuk menyimpan state UI
     let activeCodebase = '';
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Update tanda centang
                 modelSelectorLinks.forEach(l => {
-                    const icon = l.querySelector('i');
+                    const icon = l.querySelector('i.uil-check-circle');
                     if(icon) icon.remove();
                 });
                 const checkIcon = document.createElement('i');
@@ -90,6 +91,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fungsi Inti ---
 
+    /**
+     * Menambahkan styling interaktif pada blok kode yang di-render.
+     * @param {HTMLElement} container - Elemen kontainer dari pesan AI.
+     */
+    const enhanceCodeBlocks = (container) => {
+        const pres = container.querySelectorAll('pre');
+
+        pres.forEach(pre => {
+            if (pre.parentElement.classList.contains('code-block-wrapper')) {
+                return; // Sudah di-enhance, jangan proses lagi
+            }
+
+            const code = pre.querySelector('code');
+            if (!code) return;
+
+            const langClass = Array.from(code.classList).find(c => c.startsWith('language-'));
+            const language = langClass ? langClass.replace('language-', '') : 'text';
+
+            // 1. Buat wrapper utama
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper bg-[#0d1117] border border-gray-700 rounded-lg overflow-hidden my-4';
+
+            // 2. Buat header
+            const header = document.createElement('div');
+            header.className = 'flex items-center justify-between bg-[#161b22] px-4 py-2 text-xs text-gray-400 border-b border-gray-700';
+            
+            const langSpan = document.createElement('span');
+            langSpan.className = 'font-mono uppercase';
+            langSpan.textContent = language;
+
+            // 3. Buat tombol copy
+            const copyButton = document.createElement('button');
+            copyButton.className = 'flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-gray-700 active:bg-gray-600 transition-colors';
+            copyButton.innerHTML = `<i class="uil uil-copy text-base"></i><span class="text-sm">Copy code</span>`;
+
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(code.innerText).then(() => {
+                    copyButton.innerHTML = `<i class="uil uil-check text-base text-green-400"></i><span class="text-sm">Copied!</span>`;
+                    setTimeout(() => {
+                        copyButton.innerHTML = `<i class="uil uil-copy text-base"></i><span class="text-sm">Copy code</span>`;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Gagal menyalin kode:', err);
+                });
+            });
+
+            header.appendChild(langSpan);
+            header.appendChild(copyButton);
+
+            // 4. Susun ulang DOM
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(header);
+            wrapper.appendChild(pre);
+
+            // 5. Atur style untuk tag <pre> dan <code>
+            pre.className = 'p-4 overflow-x-auto text-sm bg-transparent';
+            code.classList.add('text-gray-200');
+        });
+    };
+
     const sendMessage = async () => {
         const message = chatInput.value.trim();
         if (!message) return;
@@ -129,16 +190,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
                 
-                if(firstChunk) {
+                if (firstChunk && !done) {
                     aiTextElement.innerHTML = '';
                     firstChunk = false;
                 }
 
+                if (done) {
+                    // Setelah stream selesai, jalankan fungsi untuk mempercantik blok kode
+                    enhanceCodeBlocks(aiTextElement);
+                    break;
+                }
+
                 const chunk = decoder.decode(value, { stream: true });
                 aiResponse += chunk;
-                aiTextElement.innerHTML = aiResponse;
+                aiTextElement.innerHTML = aiResponse; // Render HTML secara streaming
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         } catch (error) {
@@ -152,7 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
         messageWrapper.className = `mb-6 flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
         
         const messageBubble = document.createElement('div');
-        messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm ${role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-800'}`;
+        
+        if (role === 'user') {
+            // Bubble biru untuk user
+            messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm bg-blue-600 text-white`;
+        } else {
+            // Tanpa bubble untuk AI, agar blok kode bisa full-width
+            messageBubble.className = `max-w-4xl w-full`;
+        }
         
         const textElement = document.createElement('div');
         textElement.className = 'message-content prose prose-sm max-w-none';
