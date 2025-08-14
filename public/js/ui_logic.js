@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Variabel untuk menyimpan codebase yang aktif
+    // Variabel untuk menyimpan state UI
     let activeCodebase = '';
+    let selectedModel = 'gemini-1.5-flash-latest'; // Model default
 
     // --- Selektor Elemen DOM ---
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -9,9 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     
     // Elemen UI Sidebar & Header
-    const newChatBtn = document.querySelector('aside button.flex');
+    const newChatBtn = document.querySelector('aside button.flex'); // Tombol New Chat lama, bisa disesuaikan
     const modelSelectorBtn = document.getElementById('model-selector-btn');
     const modelDropdown = document.getElementById('model-dropdown');
+    const modelSelectorLinks = modelDropdown.querySelectorAll('a');
+    const modelNameDisplay = modelSelectorBtn.querySelector('span');
 
     // Elemen Modal Codebase
     const codebaseBtn = document.getElementById('codebase-btn');
@@ -22,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Logika Event Listener ---
 
-    // Fungsikan tombol "New Chat"
+    // Fungsikan tombol "New Chat" (saat ini hanya me-reload)
     if (newChatBtn) {
-        newChatBtn.addEventListener('click', () => window.location.reload());
+        newChatBtn.addEventListener('click', () => window.location.href = '/');
     }
 
     // Fungsikan dropdown pemilih model
@@ -34,6 +37,32 @@ document.addEventListener('DOMContentLoaded', () => {
             modelDropdown.classList.toggle('hidden');
         });
     }
+
+    // Tambahkan event listener untuk setiap link model
+    modelSelectorLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const newModel = link.getAttribute('data-model');
+            const modelText = link.querySelector('span').innerText.trim(); // Ambil teks dari span
+
+            if (newModel) {
+                selectedModel = newModel;
+                modelNameDisplay.innerText = modelText; // Update tampilan tombol
+
+                // Update tanda centang
+                modelSelectorLinks.forEach(l => {
+                    const icon = l.querySelector('i');
+                    if(icon) icon.remove();
+                });
+                const checkIcon = document.createElement('i');
+                checkIcon.className = 'uil uil-check-circle text-blue-600';
+                link.appendChild(checkIcon);
+
+                console.log(`Model changed to: ${selectedModel}`);
+            }
+            modelDropdown.classList.add('hidden');
+        });
+    });
     
     // Sembunyikan dropdown jika klik di luar area
     window.addEventListener('click', () => {
@@ -60,10 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveCodebaseBtn) {
         saveCodebaseBtn.addEventListener('click', () => {
             activeCodebase = codebaseTextarea.value;
-            console.log("Codebase saved!", activeCodebase); // Untuk debugging
+            console.log("Codebase saved!");
             codebaseModal.classList.add('hidden');
             // Beri feedback visual bahwa codebase aktif
-            codebaseBtn.classList.add('text-blue-600'); 
+            codebaseBtn.classList.add('text-blue-600');
         });
     }
 
@@ -72,10 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendMessage = async () => {
         const message = chatInput.value.trim();
         if (!message) return;
-
-        // Di sini kita bisa menyertakan `activeCodebase` jika perlu
-        // const fullMessage = `Codebase:\n${activeCodebase}\n\nQuestion: ${message}`;
-        // Untuk sekarang, kita tetap kirim pesan aslinya saja
 
         if (!welcomeScreen.classList.contains('hidden')) {
             welcomeScreen.classList.add('hidden');
@@ -88,41 +113,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const aiMessageContainer = appendMessage('', 'ai');
         const aiTextElement = aiMessageContainer.querySelector('.message-content');
+        
+        // Tambahkan indikator loading
+        aiTextElement.innerHTML = '<div class="p-1"><span class="font-semibold animate-pulse">Caecillia is thinking...</span></div>';
+
 
         try {
             const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // Nanti body bisa di-extend dengan codebase
-                body: JSON.stringify({ message }),
+                body: JSON.stringify({
+                    message,
+                    codebase: activeCodebase,
+                    modelName: selectedModel
+                }),
             });
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let aiResponse = '';
+            
+            // Hapus indikator loading saat chunk pertama diterima
+            let firstChunk = true;
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
+                
+                if(firstChunk) {
+                    aiTextElement.innerHTML = ''; // Hapus loading
+                    firstChunk = false;
+                }
+
                 const chunk = decoder.decode(value, { stream: true });
                 aiResponse += chunk;
-                aiTextElement.innerHTML = aiResponse;
+                aiTextElement.innerHTML = aiResponse; // Render sebagai HTML
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         } catch (error) {
             console.error('Error fetching chat response:', error);
-            aiTextElement.innerHTML = '<p class="text-red-500">Maaf, terjadi kesalahan.</p>';
+            aiTextElement.innerHTML = '<p class="text-red-500">Maaf, terjadi kesalahan. Pastikan API Key valid dan coba lagi.</p>';
         }
     };
 
     const appendMessage = (content, role) => {
         const messageWrapper = document.createElement('div');
         messageWrapper.className = `mb-6 flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+        
         const messageBubble = document.createElement('div');
-        messageBubble.className = `max-w-2xl rounded-xl p-4 ${role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`;
+        messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm ${role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-800'}`;
+        
         const textElement = document.createElement('div');
-        textElement.className = 'message-content';
+        textElement.className = 'message-content prose prose-sm max-w-none'; // Styling dengan tailwind typography
         textElement.innerHTML = content;
+
         messageBubble.appendChild(textElement);
         messageWrapper.appendChild(messageBubble);
         chatContainer.appendChild(messageWrapper);
