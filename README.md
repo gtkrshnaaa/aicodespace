@@ -33,7 +33,7 @@ Filosofi desain **AI Code Space** berfokus pada efisiensi sumber daya dan pengal
 Berikut adalah struktur folder Monolith MVC yang digunakan dalam proyek ini:
 
 ```
-AI_Code_Space/
+aicodespace/
 ├── main.js
 ├── package.json
 ├── index.js
