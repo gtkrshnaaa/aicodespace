@@ -1,5 +1,4 @@
-// main.js
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, nativeTheme } = require('electron');
 const path = require('path');
 
 // Impor dan jalankan server Express kita
@@ -9,9 +8,9 @@ function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
-        title: "AI Code Space", // Judul jendela aplikasi
+        title: "AI Code Space",
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'), // Kita akan buat file ini nanti jika perlu
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false,
         },
@@ -23,8 +22,19 @@ function createWindow() {
     // Muat aplikasi dari server lokal Express
     mainWindow.loadURL('http://localhost:41999');
 
-    // Buka DevTools untuk debugging, bisa dihapus nanti
-    mainWindow.webContents.openDevTools();
+    // Kirim tema awal setelah halaman selesai dimuat
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('theme-updated', nativeTheme.shouldUseDarkColors);
+    });
+
+    // Dengarkan perubahan tema sistem dan kirim update ke renderer
+    nativeTheme.on('updated', () => {
+        try {
+            mainWindow.webContents.send('theme-updated', nativeTheme.shouldUseDarkColors);
+        } catch (error) {
+            console.error("Gagal mengirim update tema:", error);
+        }
+    });
 }
 
 app.whenReady().then(() => {

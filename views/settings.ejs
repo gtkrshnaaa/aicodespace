@@ -1,45 +1,44 @@
-<%# views/settings.ejs %>
 <div class="flex h-screen font-sans">
-    <aside class="w-64 bg-gray-100 p-4 flex flex-col text-gray-800 border-r">
+    <aside class="w-64 bg-gray-100 dark:bg-[#161b22] p-4 flex flex-col text-gray-800 dark:text-gray-300 border-r dark:border-gray-700">
         <div class="flex items-center justify-between mb-8">
             <h1 class="text-xl font-semibold">AI Code Space</h1>
         </div>
-        <a href="/" class="flex items-center gap-3 w-full p-2 mb-2 text-left text-sm rounded-lg hover:bg-gray-200">
+        <a href="/" class="flex items-center gap-3 w-full p-2 mb-2 text-left text-sm rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             <i class="uil uil-comment-alt-dots text-xl"></i> Chat
         </a>
-        <a href="/settings" class="flex items-center gap-3 w-full p-2 mb-4 text-left text-sm bg-blue-100 text-blue-700 rounded-lg">
+        <a href="/settings" class="flex items-center gap-3 w-full p-2 mb-4 text-left text-sm bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400 rounded-lg">
              <i class="uil uil-cog text-xl"></i> Settings
         </a>
         <div class="flex-grow"></div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-white text-gray-800 overflow-y-auto">
-        <header class="p-4 border-b">
+    <main class="flex-1 flex flex-col bg-white dark:bg-[#0d1117] text-gray-800 dark:text-gray-300 overflow-y-auto">
+        <header class="p-4 border-b dark:border-gray-700">
             <h1 class="text-2xl font-bold">Settings</h1>
-            <p class="text-gray-500">Sesuaikan personalisasi dan API Key Gemini di sini.</p>
+            <p class="text-gray-500 dark:text-gray-400">Sesuaikan personalisasi dan API Key Gemini di sini.</p>
         </header>
 
         <div class="p-6 space-y-8">
             <section>
                 <h2 class="text-xl font-semibold mb-4">Personalisasi</h2>
-                <form action="/settings/general" method="POST" class="space-y-4 p-4 border rounded-lg">
+                <form action="/settings/general" method="POST" class="space-y-4 p-4 border dark:border-gray-700 rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="user_name" class="block text-sm font-medium text-gray-700">Nama Kamu</label>
-                            <input type="text" id="user_name" name="user_name" value="<%= settings.user_name %>" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <label for="user_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Kamu</label>
+                            <input type="text" id="user_name" name="user_name" value="<%= settings.user_name %>" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
-                            <label for="ai_name" class="block text-sm font-medium text-gray-700">Nama AI</label>
-                            <input type="text" id="ai_name" name="ai_name" value="<%= settings.ai_name %>" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <label for="ai_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama AI</label>
+                            <input type="text" id="ai_name" name="ai_name" value="<%= settings.ai_name %>" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         </div>
                     </div>
                     <div>
-                        <label for="user_info" class="block text-sm font-medium text-gray-700">Informasi Tentang Kamu (untuk Konteks AI)</label>
-                        <textarea id="user_info" name="user_info" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"><%= settings.saved_info.user %></textarea>
+                        <label for="user_info" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Informasi Tentang Kamu (untuk Konteks AI)</label>
+                        <textarea id="user_info" name="user_info" rows="4" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"><%= settings.saved_info.user %></textarea>
                     </div>
                     <div>
-                        <label for="ai_info" class="block text-sm font-medium text-gray-700">Informasi Tentang AI (Instruksi Perilaku)</label>
-                        <textarea id="ai_info" name="ai_info" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"><%= settings.saved_info.ai %></textarea>
+                        <label for="ai_info" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Informasi Tentang AI (Instruksi Perilaku)</label>
+                        <textarea id="ai_info" name="ai_info" rows="4" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"><%= settings.saved_info.ai %></textarea>
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan Personalisasi</button>
@@ -49,9 +48,9 @@
 
             <section>
                 <h2 class="text-xl font-semibold mb-4">Manajemen API Key Gemini</h2>
-                <div class="p-4 border rounded-lg">
+                <div class="p-4 border dark:border-gray-700 rounded-lg">
                     <form action="/settings/keys" method="POST" class="flex items-center gap-4 mb-6">
-                        <input type="password" name="new_key" placeholder="Masukkan API Key baru di sini..." class="flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" name="new_key" placeholder="Masukkan API Key baru di sini..." class="flex-grow px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Tambah Key</button>
                     </form>
 
@@ -59,23 +58,23 @@
                         <h3 class="text-lg font-medium">Key Tersimpan</h3>
                         <% if (keys.available_keys.length > 0) { %>
                             <% keys.available_keys.forEach(key => { %>
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
-                                    <div class="font-mono text-sm text-gray-600">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-md">
+                                    <div class="font-mono text-sm text-gray-600 dark:text-gray-400">
                                         <%= key.substring(0, 4) + '...'.padEnd(35, '.') + key.substring(key.length - 4) %>
                                         <% if (key === keys.active_key) { %>
-                                            <span class="ml-2 text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">AKTIF</span>
+                                            <span class="ml-2 text-xs font-bold text-blue-600 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/60 px-2 py-1 rounded-full">AKTIF</span>
                                         <% } %>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <form action="/settings/keys" method="POST">
                                             <input type="hidden" name="active_key" value="<%= key %>">
-                                            <button type="submit" class="p-2 text-gray-500 hover:text-blue-600" title="Jadikan Aktif" <% if (key === keys.active_key) { %>disabled<% } %>>
+                                            <button type="submit" class="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" title="Jadikan Aktif" <% if (key === keys.active_key) { %>disabled<% } %>>
                                                 <i class="uil uil-check-circle"></i>
                                             </button>
                                         </form>
                                         <form action="/settings/keys" method="POST">
                                             <input type="hidden" name="delete_key" value="<%= key %>">
-                                            <button type="submit" class="p-2 text-gray-500 hover:text-red-600" title="Hapus Key">
+                                            <button type="submit" class="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-500" title="Hapus Key">
                                                 <i class="uil uil-trash-alt"></i>
                                             </button>
                                         </form>
@@ -83,7 +82,7 @@
                                 </div>
                             <% }) %>
                         <% } else { %>
-                            <p class="text-gray-500 text-center py-4">Belum ada API Key yang tersimpan.</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-center py-4">Belum ada API Key yang tersimpan.</p>
                         <% } %>
                     </div>
                 </div>
