@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const checkIcon = document.createElement('i');
                     checkIcon.className = 'uil uil-check-circle text-gray-800 dark:text-white';
                     link.appendChild(checkIcon);
-                    console.log(`Model changed to: ${selectedModel}`);
                 }
                 modelDropdown.classList.add('hidden');
             });
@@ -80,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveCodebaseBtn) {
         saveCodebaseBtn.addEventListener('click', () => {
             activeCodebase = codebaseTextarea.value;
-            console.log("Codebase saved!");
             codebaseModal.classList.add('hidden');
             codebaseBtn.classList.add('text-gray-800', 'dark:text-white');
         });
@@ -95,14 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const langClass = Array.from(code.classList).find(c => c.startsWith('language-'));
             const language = langClass ? langClass.replace('language-', '') : 'text';
             const wrapper = document.createElement('div');
-            wrapper.className = 'code-block-wrapper bg-[#0d1117] border border-zinc-700 rounded-lg overflow-hidden my-4';
+            wrapper.className = 'code-block-wrapper bg-[#1e1f20] border border-[#3c3d3f] rounded-lg overflow-hidden my-4';
             const header = document.createElement('div');
-            header.className = 'flex items-center justify-between bg-[#1e1e1e] px-4 py-2 text-xs text-gray-400 border-b border-zinc-700';
+            header.className = 'flex items-center justify-between bg-[#1e1f20] px-4 py-2 text-xs text-[#9e9e9e] border-b border-[#3c3d3f]';
             const langSpan = document.createElement('span');
             langSpan.className = 'font-mono uppercase';
             langSpan.textContent = language;
             const copyButton = document.createElement('button');
-            copyButton.className = 'flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-zinc-700 active:bg-zinc-600 transition-colors';
+            copyButton.className = 'flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-[#282a2c] active:bg-[#3c3d3f] transition-colors';
             copyButton.innerHTML = `<i class="uil uil-copy text-base"></i><span class="text-sm">Copy code</span>`;
             copyButton.addEventListener('click', () => {
                 navigator.clipboard.writeText(code.innerText).then(() => {
@@ -174,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageWrapper.className = `mb-6 flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
         const messageBubble = document.createElement('div');
         if (role === 'user') {
-            messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm bg-gray-200 dark:bg-zinc-700 text-gray-900 dark:text-gray-100`;
+            messageBubble.className = `max-w-4xl rounded-xl p-4 shadow-sm bg-white dark:bg-[#2d2d2f] text-gray-900 dark:text-gray-100`;
         } else {
             messageBubble.className = `max-w-4xl w-full`;
         }
