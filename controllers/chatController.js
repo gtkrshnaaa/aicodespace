@@ -1,9 +1,12 @@
-// controllers/chatController.js
 const chatModel = require('../models/chatModel');
 
 const renderChat = (req, res) => {
     try {
-        res.render('chat/index');
+        const { sessionId } = req.params;
+        res.render('chat/index', {
+            sessions: res.locals.sessions || [],
+            activeSessionId: sessionId
+        });
     } catch (error) {
         console.error("Error rendering chat:", error);
         res.status(500).send("Gagal memuat halaman chat.");
@@ -12,20 +15,19 @@ const renderChat = (req, res) => {
 
 const handleChat = async (req, res) => {
     try {
-        // --- Modifikasi: Ambil data tambahan dari body ---
-        const { message, codebase, modelName } = req.body;
-        // ------------------------------------------------
+        const { message, codebase, modelName, sessionId } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+        }
+        if (!sessionId) {
+            return res.status(400).json({ error: 'ID Sesi tidak ditemukan.' });
         }
 
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         res.setHeader('Transfer-Encoding', 'chunked');
 
-        // --- Modifikasi: Kirim data lengkap ke model ---
-        await chatModel.generateResponse(message, codebase, modelName, res);
-        // --------------------------------------------
+        await chatModel.generateResponse(sessionId, message, codebase, modelName, res);
 
     } catch (error) {
         console.error("Error in handleChat controller:", error);

@@ -1,18 +1,18 @@
-// models/chatModel.js
 const fs = require('fs/promises');
+const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-let { settings, keys, historyFilePath } = require('../config/appConfig');
+let { settings, keys } = require('../config/appConfig');
+
+const historyDir = path.join(__dirname, '..', 'chat_history');
 
 let genAI;
-let model;
 
 function initializeGenAI() {
     keys = require('../config/appConfig').keys;
     settings = require('../config/appConfig').settings;
-    
     const apiKey = keys.active_key || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.warn("Peringatan: API Key Gemini tidak ditemukan. Silakan atur di halaman Settings.");
+        console.warn("Peringatan: API Key Gemini tidak ditemukan.");
         genAI = null;
         return;
     }
@@ -21,13 +21,14 @@ function initializeGenAI() {
 
 initializeGenAI();
 
-const getHistory = async () => {
+const getHistory = async (sessionId) => {
+    const sessionFile = path.join(historyDir, `${sessionId}.json`);
     try {
-        const data = await fs.readFile(historyFilePath, 'utf-8');
+        const data = await fs.readFile(sessionFile, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
         if (error.code === 'ENOENT') {
-            await fs.writeFile(historyFilePath, '[]', 'utf-8');
+            await fs.writeFile(sessionFile, '[]', 'utf-8');
             return [];
         }
         console.error("Error reading history:", error);
@@ -35,38 +36,26 @@ const getHistory = async () => {
     }
 };
 
-const updateHistory = async (userMessage, aiResponse) => {
+const updateHistory = async (sessionId, userMessage, aiResponse) => {
+    const sessionFile = path.join(historyDir, `${sessionId}.json`);
     try {
-        const history = await getHistory();
+        const history = await getHistory(sessionId);
         history.push({ role: 'user', parts: [{ text: userMessage }] });
         history.push({ role: 'model', parts: [{ text: aiResponse }] });
-        await fs.writeFile(historyFilePath, JSON.stringify(history, null, 2));
+        await fs.writeFile(sessionFile, JSON.stringify(history, null, 2));
     } catch (error) {
         console.error("Error updating history:", error);
     }
 };
 
-
-/**
- * Menghasilkan respons dari AI secara streaming.
- * @param {string} latestUserInput - Input terakhir dari pengguna.
- * @param {string} codebase - Konteks kode yang diinjeksi.
- * @param {string} modelName - Nama model yang akan digunakan.
- * @param {WritableStream} responseStream - Stream respons dari Express.
- */
-const generateResponse = async (latestUserInput, codebase, modelName, responseStream) => {
+const generateResponse = async (sessionId, latestUserInput, codebase, modelName, responseStream) => {
     try {
         initializeGenAI();
-        
-        if (!genAI) {
-            throw new Error("Gemini AI tidak terinisialisasi. Periksa API Key.");
-        }
+        if (!genAI) throw new Error("Gemini AI tidak terinisialisasi.");
 
         const modelToUse = genAI.getGenerativeModel({ model: modelName || 'gemini-2.5-flash' });
-
-        const chatHistory = await getHistory();
+        const chatHistory = await getHistory(sessionId);
         
-        // Instruksi dibuat tegas dan jelas untuk memastikan semua output adalah HTML.
         let systemInstructionText = `
 ATURAN MUTLAK: Kamu adalah asisten AI di dalam aplikasi desktop. Semua responsmu akan di-render sebagai HTML. Oleh karena itu, SETIAP KATA yang kamu hasilkan HARUS dibungkus dalam tag HTML yang valid.
 - Gunakan <p>...</p> untuk paragraf, sapaan, atau kalimat apa pun.
@@ -85,7 +74,7 @@ Contoh BENAR:
 
 Konteks Personalisasi: ${JSON.stringify(settings)}
         `.trim();
-
+        
         if (codebase && codebase.trim() !== '') {
             systemInstructionText += `\n\nBerikut adalah codebase yang relevan untuk pertanyaan saat ini. Anggap ini sebagai konteks utama:\n\`\`\`\n${codebase}\n\`\`\``;
         }
@@ -108,7 +97,7 @@ Konteks Personalisasi: ${JSON.stringify(settings)}
             responseStream.write(chunkText);
         }
         
-        await updateHistory(latestUserInput, fullResponse);
+        await updateHistory(sessionId, latestUserInput, fullResponse);
 
     } catch (error) {
         console.error('Error generating response from Gemini:', error);

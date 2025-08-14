@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const pathParts = window.location.pathname.split('/');
+    const sessionId = pathParts.length > 2 && pathParts[1] === 'chat' ? pathParts[2] : null;
+
     let activeCodebase = '';
     let selectedModel = 'gemini-2.5-flash';
 
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-container');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
-    const newChatBtn = document.querySelector('aside button.flex');
+    const newChatBtn = document.querySelector('aside a[href="/"]');
     const modelSelectorBtn = document.getElementById('model-selector-btn');
     const modelDropdown = document.getElementById('model-dropdown');
     const modelSelectorLinks = modelDropdown.querySelectorAll('a');
@@ -29,7 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const codebaseTextarea = document.getElementById('codebase-textarea');
 
     if (newChatBtn) {
-        newChatBtn.addEventListener('click', () => window.location.href = '/');
+        newChatBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '/';
+        });
     }
 
     if (modelSelectorBtn && modelDropdown) {
@@ -125,6 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendMessage = async () => {
         const message = chatInput.value.trim();
         if (!message) return;
+
+        if (!sessionId) {
+            alert("Error: Session ID tidak valid. Silakan mulai chat baru.");
+            return;
+        }
+
         if (welcomeScreen && !welcomeScreen.classList.contains('hidden')) {
             welcomeScreen.classList.add('hidden');
             chatContainer.classList.remove('hidden');
@@ -139,7 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, codebase: activeCodebase, modelName: selectedModel }),
+                body: JSON.stringify({
+                    message,
+                    sessionId,
+                    codebase: activeCodebase,
+                    modelName: selectedModel
+                }),
             });
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const reader = response.body.getReader();
