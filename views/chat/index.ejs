@@ -1,0 +1,25 @@
+<% layout('../layouts/main') %>
+
+<div class="flex h-screen">
+    <div class="w-full flex flex-col">
+        <header class="bg-gray-800 p-4 shadow-md">
+            <h1 class="text-xl font-semibold">AI Code Space</h1>
+        </header>
+
+        <main class="flex-1 p-4 overflow-y-auto">
+            <!-- Tempat pesan-pesan chat akan muncul -->
+            <div id="chat-container">
+                <div class="p-4 bg-gray-800 rounded-lg">
+                    <p>Halo Kiann, selamat datang di AI Code Space! Aku Caecillia, siap membantumu hari ini. 😊</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-4 bg-gray-800">
+            <div class="flex items-center">
+                <textarea id="chat-input" class="w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ketik pesanmu di sini..."></textarea>
+                <button id="send-btn" class="ml-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700">Kirim</button>
+            </div>
+        </footer>
+    </div>
+</div>
