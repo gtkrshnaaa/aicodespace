@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Variabel untuk menyimpan state UI
     let activeCodebase = '';
-    let selectedModel = 'gemini-2.5-flash-latest'; // Model default
+    let selectedModel = 'gemini-2.5-flash'; // Model default
 
     // --- Selektor Elemen DOM ---
     const welcomeScreen = document.getElementById('welcome-screen');

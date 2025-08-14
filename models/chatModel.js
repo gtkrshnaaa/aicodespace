@@ -39,7 +39,7 @@ const generateResponse = async (latestUserInput, codebase, modelName, responseSt
             throw new Error("Gemini AI tidak terinisialisasi. Periksa API Key.");
         }
 
-        const modelToUse = genAI.getGenerativeModel({ model: modelName || 'gemini-2.5-flash-latest' });
+        const modelToUse = genAI.getGenerativeModel({ model: modelName || 'gemini-2.5-flash' });
 
         const chatHistory = await getHistory();
         
