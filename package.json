@@ -1,28 +1,30 @@
 {
-  "name": "aicodespace",
-  "version": "1.0.0",
-  "description": "**AI Code Space** adalah aplikasi asisten koding berbasis desktop yang dikembangkan di atas Electron, dirancang untuk memanfaatkan Gemini API secara efisien. Aplikasi ini dibangun dengan filosofi utama untuk tetap ringan dan responsif, bahkan pada perangkat dengan spesifikasi terbatas, melalui pendekatan teknis yang inovatif. **AI Code Space** ditujukan untuk para pengembang yang membutuhkan asisten koding cerdas dengan pengalaman yang lancar dan terpersonalisasi.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gtkrshnaaa/aicodespace.git"
-  },
-  "keywords": [],
-  "author": "gtkrshnaaa",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gtkrshnaaa/aicodespace/issues"
-  },
-  "homepage": "https://github.com/gtkrshnaaa/aicodespace#readme",
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "ejs": "^3.1.10",
-    "express": "^5.1.0"
-  },
-  "devDependencies": {
-    "electron": "^37.2.6"
-  }
+    "name": "aicodespace",
+    "version": "0.0.1",
+    "description": "**AI Code Space** adalah aplikasi asisten koding berbasis desktop yang dikembangkan di atas Electron, dirancang untuk memanfaatkan Gemini API secara efisien...",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gtkrshnaaa/aicodespace.git"
+    },
+    "keywords": [],
+    "author": "gtkrshnaaa",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/gtkrshnaaa/aicodespace/issues"
+    },
+    "homepage": "https://github.com/gtkrshnaaa/aicodespace#readme",
+    "dependencies": {
+        "@google/generative-ai": "^0.24.1",
+        "ejs": "^3.1.10",
+        "express": "^5.1.0",
+        "express-ejs-layouts": "^2.5.1"
+    },
+    "devDependencies": {
+        "electron": "^37.2.6"
+    }
 }
