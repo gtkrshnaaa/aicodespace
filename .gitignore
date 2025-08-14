@@ -9,7 +9,8 @@ config/keys.json
 config/settings.json
 
 # Riwayat Chat Pengguna
-chat_history/history.json
+chat_history/*
+!chat_history/.gitkeep
 
 # Logs
 *.log
