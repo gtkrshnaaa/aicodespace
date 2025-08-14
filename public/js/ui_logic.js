@@ -145,8 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
             wrapper.appendChild(header);
             wrapper.appendChild(pre);
 
-            // 5. Atur style untuk tag <pre> dan <code>
-            pre.className = 'p-4 overflow-x-auto text-sm bg-transparent';
+            // Tag <pre> sekarang hanya untuk scrolling
+            pre.className = 'overflow-x-auto text-sm';
+            // Tag <code> kita buat block dan beri padding di dalamnya
+            code.style.display = 'block';
+            code.style.padding = '1rem'; // Ini setara dengan class p-4 di Tailwind
             // Memicu Prism untuk mewarnai elemen kode ini
             Prism.highlightElement(code);
         });

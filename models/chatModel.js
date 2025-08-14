@@ -21,8 +21,31 @@ function initializeGenAI() {
 
 initializeGenAI();
 
-const getHistory = async () => { /* ... (fungsi ini tidak berubah) ... */ };
-const updateHistory = async (userMessage, aiResponse) => { /* ... (fungsi ini tidak berubah) ... */ };
+const getHistory = async () => {
+    try {
+        const data = await fs.readFile(historyFilePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            await fs.writeFile(historyFilePath, '[]', 'utf-8');
+            return [];
+        }
+        console.error("Error reading history:", error);
+        return [];
+    }
+};
+
+const updateHistory = async (userMessage, aiResponse) => {
+    try {
+        const history = await getHistory();
+        history.push({ role: 'user', parts: [{ text: userMessage }] });
+        history.push({ role: 'model', parts: [{ text: aiResponse }] });
+        await fs.writeFile(historyFilePath, JSON.stringify(history, null, 2));
+    } catch (error) {
+        console.error("Error updating history:", error);
+    }
+};
+
 
 /**
  * Menghasilkan respons dari AI secara streaming.
@@ -43,7 +66,25 @@ const generateResponse = async (latestUserInput, codebase, modelName, responseSt
 
         const chatHistory = await getHistory();
         
-        let systemInstructionText = `AI berada pada sebuah aplikasi coding assistant bernama AI Code Space. Aplikasi ini memiliki batasan teknis: ia hanya bisa merender konten dalam format HTML. Oleh karena itu, semua balasan HARUS berbentuk HTML yang valid. AI tidak diperkenankan untuk menyertakan tag <body>, <html>, atau <head>. Setiap kali AI menulis blok kode, ia harus membungkusnya dalam tag <pre><code class="language-js">...</code></pre> dan menyertakan nama bahasanya di atribut class. \nKonteks Personalisasi: ${JSON.stringify(settings)}`;
+        // Instruksi dibuat tegas dan jelas untuk memastikan semua output adalah HTML.
+        let systemInstructionText = `
+ATURAN MUTLAK: Kamu adalah asisten AI di dalam aplikasi desktop. Semua responsmu akan di-render sebagai HTML. Oleh karena itu, SETIAP KATA yang kamu hasilkan HARUS dibungkus dalam tag HTML yang valid.
+- Gunakan <p>...</p> untuk paragraf, sapaan, atau kalimat apa pun.
+- Gunakan <strong>...</strong> untuk menekankan kata atau frasa kunci yang penting agar mudah dibaca.
+- Gunakan <pre><code class="language-xxx">...</code></pre> untuk blok kode. Ganti 'xxx' dengan nama bahasa (contoh: 'javascript', 'python', 'java').
+- JANGAN PERNAH menulis teks mentah tanpa tag HTML.
+- JANGAN PERNAH menggunakan tag <html>, <head>, atau <body>.
+
+Contoh SALAH:
+Halo! Ini kode yang kamu minta:
+<pre><code>...</code></pre>
+
+Contoh BENAR:
+<p>Tentu, Kiann! Berikut adalah <strong>implementasi iteratif</strong> dari deret Fibonacci menggunakan Java:</p><pre><code class="language-java">...</code></pre>
+<p>Metode ini <strong>lebih efisien</strong> dari sisi memori dibandingkan rekursif.</p>
+
+Konteks Personalisasi: ${JSON.stringify(settings)}
+        `.trim();
 
         if (codebase && codebase.trim() !== '') {
             systemInstructionText += `\n\nBerikut adalah codebase yang relevan untuk pertanyaan saat ini. Anggap ini sebagai konteks utama:\n\`\`\`\n${codebase}\n\`\`\``;
