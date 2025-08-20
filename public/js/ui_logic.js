@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         autoResizeTextarea(chatInput);
         const aiMessageContainer = appendMessage('', 'ai');
         const aiTextElement = aiMessageContainer.querySelector('.message-content');
-        aiTextElement.innerHTML = '<div class="p-1"><span class="font-semibold animate-pulse">Caecillia is thinking...</span></div>';
+        aiTextElement.innerHTML = '<div class="p-1"><span class="font-semibold animate-pulse">Thinking...</span></div>';
         try {
             const response = await fetch('/chat', {
                 method: 'POST',
